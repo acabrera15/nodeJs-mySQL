@@ -62,6 +62,11 @@ var checkItemAndUpdate = function(ID, quantity) {
     })
 }
 
+/**
+ * starts the application. The application will prompt the user for the an ID
+ * entry and a quantity entry.  A function will be called to check the input 
+ * if the inputs are number and are valid.
+ */
 var startApplication = function() {
     inquirer
     .prompt([
@@ -98,7 +103,6 @@ var startApplication = function() {
 //makes the connection to the sql DB
 connection.connect(function(err, res) {
   if (err) throw err;
-  getAllProducts(startApplication);
 
-//   connection.end();
+  getAllProducts(startApplication);
 });
