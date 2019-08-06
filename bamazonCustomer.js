@@ -53,6 +53,7 @@ var checkItemAndUpdate = function(ID, quantity) {
             connection.query('UPDATE products SET stock_quantity = ?  WHERE item_id = ?', [newQuantity, ID], function(err, res) {
               if (err) throw err;
               getAllProducts();
+              connection.end();
             })
           }
         }
