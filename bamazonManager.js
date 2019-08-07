@@ -57,6 +57,71 @@ var getProductsWithLowStock = function() {
   });
 };
 
+var addToInventory = function() {
+  inquirer
+    .prompt([
+      {
+        message: "Enter what product inventory you would like to update: ",
+        name: "product",
+        type: "input"
+      }
+    ])
+    .then(function(res) {
+      connection.query(
+        "SELECT * FROM products WHERE product_name = ?",
+        [res.product],
+        function(err, response) {
+          if (err) throw err;
+
+          if (response.length === 0) {
+            console.log(`The item ${res.product} is not in the database`);
+          } else {
+            console.log(
+              `The current stock of ${res.product} is ${
+                response[0].stock_quantity
+              }`
+            );
+
+            inquirer
+              .prompt([
+                {
+                  message: "What would you like to change the stock to?",
+                  name: "newStock",
+                  type: "number"
+                }
+              ])
+              .then(function(stockChangeResponse) {
+                console.log(stockChangeResponse);
+
+                connection.query(
+                  "UPDATE products SET stock_quantity = ? WHERE product_name = ?",
+                  [stockChangeResponse.newStock, res.product],
+                  function(err) {
+                    if (err) throw err;
+
+                    console.log("The stock has been updated");
+
+                    getAllProducts();
+                  }
+                );
+              });
+          }
+        }
+      );
+    });
+};
+
+var addNewProduct = function() {
+    inquirer
+    .prompt([
+        {
+            type: "input",
+            name: "productName",
+            message: "Enter product Name"
+        }
+    ])
+}
+
 inquirer
   .prompt([
     {
@@ -75,7 +140,12 @@ inquirer
       getAllProducts();
     } else if (res.input === "View low inventory") {
       getProductsWithLowStock();
+    } else if (res.input === "Add to inventory") {
+      addToInventory();
+    } else if (res.input === "Add new product") {
+        addNewProduct();
+    } else {
+        console.log("There is an error");
+        connection.end();
     }
-
-    console.log(res);
   });
