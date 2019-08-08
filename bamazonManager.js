@@ -112,15 +112,32 @@ var addToInventory = function() {
 };
 
 var addNewProduct = function() {
-    inquirer
-    .prompt([
-        {
-            type: "input",
-            name: "productName",
-            message: "Enter product Name"
-        }
-    ])
-}
+  inquirer.prompt([
+    {
+      type: "input",
+      name: "productName",
+      message: "Enter product Name: "
+    },
+    {
+      type: "input",
+      name: "department",
+      message: "Enter item department: "
+    },
+    {
+      type: "number",
+      name: "price",
+      message: "Enter the price"
+    },
+    {
+      type: "number",
+      name: "stock",
+      message: "Enter the stock count: "
+    }
+  ])
+  .then(function(response) {
+    console.log(response);
+  })
+};
 
 inquirer
   .prompt([
@@ -143,9 +160,9 @@ inquirer
     } else if (res.input === "Add to inventory") {
       addToInventory();
     } else if (res.input === "Add new product") {
-        addNewProduct();
+      addNewProduct();
     } else {
-        console.log("There is an error");
-        connection.end();
+      console.log("There is an error");
+      connection.end();
     }
   });
