@@ -136,6 +136,15 @@ var addNewProduct = function() {
   ])
   .then(function(response) {
     console.log(response);
+
+    connection.query("INSERT INTO products" + 
+    "(product_name, department_name, price, stock_quantity) " + 
+    "VALUES(?, ?, ?, ?)", 
+    [response.productName, response.department, response.price, response.stock], 
+    function(res) {
+      console.log(res);
+    })
+
   })
 };
 
