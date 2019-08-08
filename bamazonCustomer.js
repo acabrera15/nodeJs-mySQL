@@ -26,49 +26,62 @@ var getAllProducts = function(continueFunction) {
     });
     console.log("----------------------------------------------");
 
-    if (continueFunction != undefined) 
-    {
-        continueFunction();
+    if (continueFunction != undefined) {
+      continueFunction();
     }
-
   });
 };
 
 var checkItemAndUpdate = function(ID, quantity) {
-    connection.query("SELECT * FROM products WHERE item_id = ?", [ID], function(err, res) {
-        if (err) throw err;
+  connection.query("SELECT * FROM products WHERE item_id = ?", [ID], function(
+    err,
+    res
+  ) {
+    if (err) throw err;
 
-        if (res.length === 0) {
-          console.log("Entry does not exist");
-        } else {
-          if (quantity > res[0].stock_quantity) {
-            console.log(`There are not enough ${res[0].product_name}!`);
-            console.log(`Please input a number less than ${res[0].stock_quantity}`);
-          } else {
-            var totalPrice = quantity * res[0].price;
-            var newQuantity = res[0].stock_quantity - quantity;
-            console.log(`Your total price for ${quantity} ${res[0].product_name} at $${res[0].price} is:`);
-            console.log("$" + totalPrice);
-
-            connection.query('UPDATE products SET stock_quantity = ?  WHERE item_id = ?', [newQuantity, ID], function(err, res) {
-              if (err) throw err;
-              getAllProducts();
-              connection.end();
-            })
-          }
+    if (res.length === 0) {
+      console.log("Entry does not exist");
+    } else {
+      if (quantity > res[0].stock_quantity) {
+        console.log(`There are not enough ${res[0].product_name}!`);
+        console.log(`Please input a number less than ${res[0].stock_quantity}`);
+      } else {
+        var totalPrice = quantity * res[0].price;
+        var newQuantity = res[0].stock_quantity - quantity;
+        console.log(
+          `Your total price for ${quantity} ${res[0].product_name} at $${
+            res[0].price
+          } is:`
+        );
+        console.log("$" + totalPrice);
+        var sales = res[0].product_sales;
+        if (sales === null) {
+          sales = 0;
         }
 
-        return true;
-    })
-}
+        sales += totalPrice;
+
+        connection.query(
+          "UPDATE products SET stock_quantity = ?, product_sales = ?  WHERE item_id = ?",
+          [newQuantity, sales,  ID],
+          function(err, res) {
+            if (err) throw err;
+            getAllProducts();
+            connection.end();
+          }
+        );
+      }
+    }
+  });
+};
 
 /**
  * starts the application. The application will prompt the user for the an ID
- * entry and a quantity entry.  A function will be called to check the input 
+ * entry and a quantity entry.  A function will be called to check the input
  * if the inputs are number and are valid.
  */
 var startApplication = function() {
-    inquirer
+  inquirer
     .prompt([
       {
         message: "Enter the ID of the product you would like to buy: ",
@@ -94,9 +107,7 @@ var startApplication = function() {
       }
     ])
     .then(function(res) {
-      if (checkItemAndUpdate(Number(res.productID), Number(res.quantityInput))) {
-          console.log("This kionda of workded")
-      }
+      checkItemAndUpdate(Number(res.productID), Number(res.quantityInput));
     });
 };
 
