@@ -31,6 +31,7 @@ var getAllProducts = function() {
       );
     });
     console.log("----------------------------------------------");
+    startManager();
   });
 };
 
@@ -54,6 +55,8 @@ var getProductsWithLowStock = function() {
       );
     });
     console.log("----------------------------------------------");
+    startManager();
+
   });
 };
 
@@ -91,7 +94,6 @@ var addToInventory = function() {
                 }
               ])
               .then(function(stockChangeResponse) {
-                console.log(stockChangeResponse);
 
                 connection.query(
                   "UPDATE products SET stock_quantity = ? WHERE product_name = ?",
@@ -102,7 +104,6 @@ var addToInventory = function() {
                     console.log("The stock has been updated");
 
                     getAllProducts();
-                    connection.end();
                   }
                 );
               });
@@ -137,7 +138,6 @@ var addNewProduct = function() {
       }
     ])
     .then(function(response) {
-      console.log(response);
 
       connection.query(
         "INSERT INTO products" +
@@ -151,12 +151,13 @@ var addNewProduct = function() {
         ],
         function(res) {
           console.log(res);
-          connection.end();
+          startManager();
         }
       );
     });
 };
 
+var startManager = function() {
 inquirer
   .prompt([
     {
@@ -166,23 +167,24 @@ inquirer
         "View Products for sale",
         "View low inventory",
         "Add to inventory",
-        "Add new product"
+        "Add new product",
+        "EXIT"
       ]
     }
   ])
   .then(function(res) {
     if (res.input === "View Products for sale") {
       getAllProducts();
-      connection.end();
     } else if (res.input === "View low inventory") {
       getProductsWithLowStock();
-      connection.end();
     } else if (res.input === "Add to inventory") {
       addToInventory();
     } else if (res.input === "Add new product") {
       addNewProduct();
     } else {
-      console.log("There is an error");
+      console.log("GOODBYE");
       connection.end();
     }
   });
+};
+startManager();
