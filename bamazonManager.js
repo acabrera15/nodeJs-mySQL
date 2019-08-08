@@ -102,6 +102,7 @@ var addToInventory = function() {
                     console.log("The stock has been updated");
 
                     getAllProducts();
+                    connection.end();
                   }
                 );
               });
@@ -112,40 +113,48 @@ var addToInventory = function() {
 };
 
 var addNewProduct = function() {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "productName",
-      message: "Enter product Name: "
-    },
-    {
-      type: "input",
-      name: "department",
-      message: "Enter item department: "
-    },
-    {
-      type: "number",
-      name: "price",
-      message: "Enter the price"
-    },
-    {
-      type: "number",
-      name: "stock",
-      message: "Enter the stock count: "
-    }
-  ])
-  .then(function(response) {
-    console.log(response);
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "productName",
+        message: "Enter product Name: "
+      },
+      {
+        type: "input",
+        name: "department",
+        message: "Enter item department: "
+      },
+      {
+        type: "number",
+        name: "price",
+        message: "Enter the price"
+      },
+      {
+        type: "number",
+        name: "stock",
+        message: "Enter the stock count: "
+      }
+    ])
+    .then(function(response) {
+      console.log(response);
 
-    connection.query("INSERT INTO products" + 
-    "(product_name, department_name, price, stock_quantity) " + 
-    "VALUES(?, ?, ?, ?)", 
-    [response.productName, response.department, response.price, response.stock], 
-    function(res) {
-      console.log(res);
-    })
-
-  })
+      connection.query(
+        "INSERT INTO products" +
+          "(product_name, department_name, price, stock_quantity) " +
+          "VALUES(?, ?, ?, ?)",
+        [
+          response.productName,
+          response.department,
+          response.price,
+          response.stock
+        ],
+        function(res) {
+          console.log(res);
+          connection.end();
+        }
+      );
+    });
 };
 
 inquirer
@@ -164,8 +173,10 @@ inquirer
   .then(function(res) {
     if (res.input === "View Products for sale") {
       getAllProducts();
+      connection.end();
     } else if (res.input === "View low inventory") {
       getProductsWithLowStock();
+      connection.end();
     } else if (res.input === "Add to inventory") {
       addToInventory();
     } else if (res.input === "Add new product") {
