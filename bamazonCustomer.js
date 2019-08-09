@@ -79,8 +79,8 @@ var checkItemAndUpdate = function(ID, quantity) {
                   startApplication();
                 } else {
                   console.log("GOODBYE");
-                  connection.end()
-                } 
+                  connection.end();
+                }
               });
           }
         );
