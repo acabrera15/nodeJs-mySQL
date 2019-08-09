@@ -66,8 +66,22 @@ var checkItemAndUpdate = function(ID, quantity) {
           [newQuantity, sales, ID],
           function(err, res) {
             if (err) throw err;
-            getAllProducts();
-            connection.end();
+            // getAllProducts();
+            inquirer
+              .prompt({
+                message: "would you like to buy more?",
+                name: "finalInput",
+                type: "list",
+                choices: ["Yes", "No"]
+              })
+              .then(function(inquirerFinalResponse) {
+                if (inquirerFinalResponse.finalInput === "Yes") {
+                  startApplication();
+                } else {
+                  console.log("GOODBYE");
+                  connection.end()
+                } 
+              });
           }
         );
       }
