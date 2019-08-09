@@ -15,26 +15,70 @@ connection.connect(function(err, res) {
   if (err) throw err;
 });
 
-var getSalesByDepartement = function() {
-  connection.query("SELECT departments.department_id, departments.department_name, departments.overhead_costs, products.product_sales " +
-  "FROM departments " +
-  "INNER JOIN products ON departments.department_name = products.department_name", function(err, res) {
-    if (err) throw err;
+var getSalesByDepartment = function() {
+  connection.query(
+    "SELECT departments.department_id, departments.department_name, departments.overhead_costs, products.product_sales " +
+      "FROM departments " +
+      "INNER JOIN products ON departments.department_name = products.department_name",
+    function(err, res) {
+      if (err) throw err;
 
-    console.log('-------------------------------------------------------------------------------------------------------------------------------------------------');
+      console.log(
+        "-------------------------------------------------------------------------------------------------------------------------------------------------"
+      );
 
-    res.forEach(element => {
-      if (element.product_sales === null) {
-        element.product_sales = 0;
+      res.forEach(element => {
+        if (element.product_sales === null) {
+          element.product_sales = 0;
+        }
+        var totalProfit = element.product_sales - element.overhead_costs;
+
+        console.log(
+          `Department ID: ${element.department_id} | Department Name: ${
+            element.department_name
+          } | Overhead Costs: ${element.overhead_costs} | Product Sales: ${
+            element.product_sales
+          } | Total Profit: ${totalProfit}`
+        );
+      });
+
+      // console.log(res);
+      console.log(
+        "-------------------------------------------------------------------------------------------------------------------------------------------------\n"
+      );
+    }
+  );
+};
+
+var addNewItemToDepartments = function() {
+  inquirer
+    .prompt([
+      {
+        message: "Enter a new Department you would like to add: ",
+        type: "input",
+        name: "newDepartment"
+      },
+      {
+        message: "Enter the the overhead costs: ",
+        type: "number",
+        name: "overheadCosts"
       }
-      var totalProfit = element.product_sales - element.overhead_costs;
+    ])
+    .then(function(inquirerResponse) {
+      var newDepartment = inquirerResponse.newDepartment;
+      var overheadCosts = inquirerResponse.overheadCosts;
 
-      console.log(`Department ID: ${element.department_id} | Department Name: ${element.department_name} | Overhead Costs: ${element.overhead_costs} | Product Sales: ${element.product_sales} | Total Profit: ${totalProfit}`);
+      connection.query(
+        "INSERT INTO departments (department_name, overhead_costs) " +
+          "VALUES (?, ?)",
+        [newDepartment, overheadCosts],
+        function(err) {
+          if (err) throw err;
+
+          console.log(`${newDepartment} successfully added`);
+        }
+      );
     });
-
-    // console.log(res);
-    console.log('-------------------------------------------------------------------------------------------------------------------------------------------------\n');
-  })
 };
 
 inquirer
@@ -51,11 +95,11 @@ inquirer
     }
   ])
   .then(function(inquirerResponse) {
-    console.log(inquirerResponse);
 
     if (inquirerResponse.input === "View Product Sales By Department") {
-      getSalesByDepartement();
+      getSalesByDepartment();
     } else if (inquirerResponse.input === "Create New Department") {
+      addNewItemToDepartments();
     } else if (inquirerResponse.input === "EXIT") {
       console.log("Goodbye");
     }
