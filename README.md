@@ -13,8 +13,13 @@ The applicaion is broken up into a three different files.
     * application will loop until the user does not want to buy anything anymore
 
 * bamazonManager.js: This file will simulate a manger and will allow the user to view all products, view low inventory products, change invetory levels and add new items
-    * The application will initially ouput a screen asking the user what they would like to do 
+    * The application will initially output a screen asking the user what they would like to do 
     * If view products for sale is selected, all products available will be output from the DB
     * If view low inventory is selected, all products with stock levels below 5 will be output
     * If add to inventory is selected, the user can change stock levels to a product and will be updated to the DB
     * if add new product is selected, user can input item they would like to add and item will be added to DB
+
+* bamazonSupervisor.js: This file will simulate a supervisor and will allow a user to view the items in the DB by department and will allow user to create a new department
+    * The application will initially show a screen for user to select what they want to do
+    * if show product sales by department is selected, information about the different departments will be output
+    * if create new department is selected, user can create a new department that will be added to the DB
