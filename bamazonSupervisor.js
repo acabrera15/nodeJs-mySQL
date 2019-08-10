@@ -46,6 +46,7 @@ var getSalesByDepartment = function() {
       console.log(
         "-------------------------------------------------------------------------------------------------------------------------------------------------\n"
       );
+      startApplication();
     }
   );
 };
@@ -76,11 +77,13 @@ var addNewItemToDepartments = function() {
           if (err) throw err;
 
           console.log(`${newDepartment} successfully added`);
+          startApplication();
         }
       );
     });
 };
 
+var startApplication = function() {
 inquirer
   .prompt([
     {
@@ -102,5 +105,10 @@ inquirer
       addNewItemToDepartments();
     } else if (inquirerResponse.input === "EXIT") {
       console.log("Goodbye");
+      connection.end();
     }
   });
+};
+
+//starts the program
+startApplication();
