@@ -11,6 +11,7 @@ The applicaion is broken up into a three different files.
     * then the user can input the item ID and the quantity they want to purchase
     * finally, the user will get a total and the mysql DB will be updated to reflect the change in inventory and the items sold
     * application will loop until the user does not want to buy anything anymore
+    ![](./Gifs/bamazonCustomerGif.gif)
 
 * bamazonManager.js: This file will simulate a manger and will allow the user to view all products, view low inventory products, change invetory levels and add new items
     * The application will initially output a screen asking the user what they would like to do 
