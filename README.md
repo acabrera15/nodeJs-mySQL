@@ -24,9 +24,3 @@ The applicaion is broken up into a three different files.
 
     * if add new product is selected, user can input item they would like to add and item will be added to DB
             ![](./Gifs/managerGif3.gif)
-
-
-* bamazonSupervisor.js: This file will simulate a supervisor and will allow a user to view the items in the DB by department and will allow user to create a new department
-    * The application will initially show a screen for user to select what they want to do
-    * if show product sales by department is selected, information about the different departments will be output
-    * if create new department is selected, user can create a new department that will be added to the DB

@@ -17,9 +17,9 @@ connection.connect(function(err, res) {
 
 var getSalesByDepartment = function() {
   connection.query(
-    "SELECT departments.department_id, departments.department_name, departments.overhead_costs, products.product_sales " +
-      "FROM departments " +
-      "INNER JOIN products ON departments.department_name = products.department_name",
+    "SELECT DISTINCT department_id, department_name, overhead_costs, product_sales FROM (SELECT DISTINCT departments.department_id, departments.department_name, departments.overhead_costs, products.product_sales " +
+      "FROM products " +
+      "INNER JOIN departments ON departments.department_name = products.department_name) AS newTable",
     function(err, res) {
       if (err) throw err;
 
